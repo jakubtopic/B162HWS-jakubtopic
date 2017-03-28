@@ -31,33 +31,37 @@ module keyboard(
         basemargin = 10,
         upwards=2
         ) {
+    translateSize = [basemargin,-basemargin,basez-keysize[2]+upwards];
 
     difference() {
-        // Keyboard base
-        keyboardBody([
-                len(layout[0])*(keysize[0]+ 2 * keymargin) +
-                    (len(layout[0]) - 1) * defaultspace,
-                len(layout)*(keysize[1]+ 2 * keymargin) +
-                    (len(layout) - 1) * defaultspace,
-                basez],
-                basemargin=basemargin);
+        // Keyboard base:
+        keyboardBase([
+                baseSize(layout[0],keysize[0],keymargin,defaultspace),
+                baseSize(layout,keysize[1],keymargin,defaultspace),
+                basez
+            ], basemargin);
 
         // Holes for keycaps
-        translate([basemargin,-basemargin,basez-keysize[2]-keymargin+upwards])
+        translate(addVec(translateSize,[0,0,-keymargin]))
             parseLayout(
                     layout,
-                    addvec(keysize,defaultspace+2*keymargin),
-                    addvec(keysize,2*keymargin),
+                    addVec(keysize,defaultspace+2*keymargin),
+                    addVec(keysize,2*keymargin),
                     defaultspace,
                     false);
-                //keyHoles(addvec(keysize,2*keymargin));
+                //keyHoles(addVec(keysize,2*keymargin));
     }
 
     // keycaps
-    color("IndianRed")
-    translate(
-            [basemargin+keymargin,-basemargin-keymargin,basez-keysize[2]+upwards])
-        parseLayout(layout,addvec(keysize,defaultspace+2*keymargin),keysize,
-                defaultspace+2*keymargin, true, keydip,textsize,textz);
+    translate(addVec(translateSize,[keymargin,-keymargin,0]))
+        parseLayout(
+                layout,
+                addVec(keysize,defaultspace+2*keymargin),
+                keysize,
+                defaultspace+2*keymargin,
+                true,
+                keydip,
+                textsize,
+                textz);
             //keyCap(keysize);
 }
