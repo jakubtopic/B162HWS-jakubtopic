@@ -43,7 +43,7 @@ module keyboard(
                 basemargin=basemargin);
 
         // Holes for keycaps
-        translate([basemargin,-basemargin,basez-keysize[2]+upwards])
+        translate([basemargin,-basemargin,basez-keysize[2]-keymargin+upwards])
             parseLayout(
                     layout,
                     addvec(keysize,defaultspace+2*keymargin),
@@ -56,7 +56,7 @@ module keyboard(
     // keycaps
     color("IndianRed")
     translate(
-            [basemargin+keymargin,-basemargin-keymargin,basez+upwards-keysize[2]+keymargin])
+            [basemargin+keymargin,-basemargin-keymargin,basez-keysize[2]+upwards])
         parseLayout(layout,addvec(keysize,defaultspace+2*keymargin),keysize,
                 defaultspace+2*keymargin, true, keydip,textsize,textz);
             //keyCap(keysize);
