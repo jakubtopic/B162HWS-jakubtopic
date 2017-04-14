@@ -1,23 +1,26 @@
+/**
+* Simple keyboard
+* 
+* @author Jakub Topic
+* @version 1.1
+*/
+
 use <keyboard/parts.scad>
 use <keyboard/functions.scad>
 
 /**
-* [keyboard description]
-* @param  {Array}  layout       [description]
-* @param  {[type]} 1            [description]
-* @param  {[type]} "A"]]]       [description]
-* @param  {Array}  keysize      [description]
-* @param  {[type]} 13           [description]
-* @param  {[type]} 7]           [description]
-* @param  {Number} keydip       [description]
-* @param  {Number} textsize     [description]
-* @param  {Number} textz        [description]
-* @param  {Number} keymargin    [description]
-* @param  {Number} defaultspace [description]
-* @param  {Number} basez        [description]
-* @param  {Number} basemargin   [description]
-* @param  {Number} upwards      [description]
-* @return {[type]}              [description]
+* Keyboard module
+* @param  {Array}  layout       Vector of vectors of vectors, that represents
+*                               the keyboard layout.
+* @param  {Array}  keysize      XYZ size of a [1,1] key
+* @param  {Number} keydip       Dip of keytops
+* @param  {Number} textsize     Size of letters
+* @param  {Number} textz        Vertical size of letters
+* @param  {Number} keymargin    Key margin
+* @param  {Number} defaultspace Size of wall separating holes
+* @param  {Number} basez        Vertical size of the base
+* @param  {Number} basemargin   Base margin
+* @param  {Number} upwards      Keycap immersion
 */
 module keyboard(
         layout=[[[1,1,"A"]]],
@@ -31,8 +34,10 @@ module keyboard(
         basemargin = 10,
         upwards=2
         ) {
+    // Vector used for a starting translation of keycaps and holes 
     translateSize = [basemargin,-basemargin,basez-keysize[2]+upwards];
 
+    // Keyboard base with holes prepared for keycaps
     difference() {
         // Keyboard base:
         keyboardBase([
@@ -49,10 +54,9 @@ module keyboard(
                     addVec(keysize,2*keymargin),
                     defaultspace,
                     false);
-                //keyHoles(addVec(keysize,2*keymargin));
     }
 
-    // keycaps
+    // Keycaps itself
     translate(addVec(translateSize,[keymargin,-keymargin,0]))
         parseLayout(
                 layout,
@@ -63,5 +67,4 @@ module keyboard(
                 keydip,
                 textsize,
                 textz);
-            //keyCap(keysize);
 }

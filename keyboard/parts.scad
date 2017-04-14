@@ -1,10 +1,9 @@
 use <functions.scad>
 
 /**
- * [keyboardBase description]
- * @param  {[type]} size       [description]
- * @param  {[type]} basemargin [description]
- * @return {[type]}            [description]
+ * Keyboard base module
+ * @param  {[type]} size       Size of keyboard base
+ * @param  {[type]} basemargin Base margin
  */
 module keyboardBase(size,basemargin) {
     hull()
@@ -15,27 +14,34 @@ module keyboardBase(size,basemargin) {
 }
 
 /**
- * [parseLayout description]
- * @param  {[type]} layout  [description]
- * @param  {[type]} size    [description]
- * @param  {[type]} keysize [description]
- * @param  {[type]} offset  [description]
- * @param  {[type]} keycap  [description]
- * @return {[type]}         [description]
+ * Keyboard layout parser - module intended for the keycaps and holes generation
+ * @param  {[type]} layout   Vector of vectors of vectors, that represents
+ *                           the keyboard layout.
+ * @param  {[type]} size     Key size plus margins and wall separator size
+ * @param  {[type]} keysize  XYZ size of a [1,1] key
+ * @param  {[type]} offset   Offset between keycaps
+ * @param  {[type]} keycap   Indicates whether to generate keycaps (true) or 
+ *                           keyholes (false).
+ * @param  {[type]} keydip   Dip of keytops
+ * @param  {[type]} textsize Size of letters
+ * @param  {[type]} textz    Vertical size of letters
  */
-module parseLayout(layout, size, keysize, offset, keycap, keydip,textsize,textz) {
+module parseLayout(layout, size, keysize, offset, keycap, keydip, textsize, textz) {
     for (row = [0:len(layout)-1])
         for (col = [0:len(layout[0])-1])
+            // Check if the key isn't empty
             if (len(layout[row][col]) > 0)
                 translate(multiplyVec(size,[col,-row,0])) {
                     ksize = addVec(
-                                multiplyVec(
-                                    keysize,
-                                    [layout[row][col][0],layout[row][col][1],1]
-                                ), [
-                                    (layout[row][col][0]-1)*offset,
-                                    (layout[row][col][1]-1)*offset, 0
-                                ]);
+                        multiplyVec(
+                            keysize,
+                            [layout[row][col][0],layout[row][col][1],1]
+                        ), [
+                            (layout[row][col][0]-1)*offset,
+                            (layout[row][col][1]-1)*offset,
+                            0
+                        ]);
+
                     if (keycap)
                         keyCap(ksize,layout[row][col][2],keydip,textsize,textz);
                     else
@@ -44,9 +50,8 @@ module parseLayout(layout, size, keysize, offset, keycap, keydip,textsize,textz)
 }
 
 /**
- * [keyHole description]
- * @param  {[type]} size [description]
- * @return {[type]}      [description]
+ * Key hole module
+ * @param  {[type]} size Size of a key hole
  */
 module keyHole(size) {
     translate([0,-size[1],0])
@@ -54,13 +59,12 @@ module keyHole(size) {
 }
 
 /**
- * [keyCap description]
- * @param  {[type]} size     [description]
- * @param  {[type]} text     [description]
- * @param  {Number} keydip   [description]
- * @param  {Number} textsize [description]
- * @param  {Number} textz    [description]
- * @return {[type]}          [description]
+ * Keycap module
+ * @param  {[type]} size     Size of keycap
+ * @param  {[type]} text     Text to be printed
+ * @param  {Number} keydip   Dip of keytops
+ * @param  {Number} textsize Size of letters
+ * @param  {Number} textz    Vertical size of letters
  */
 module keyCap(size,text,keydip,textsize,textz) {
     color("IndianRed")
@@ -79,10 +83,9 @@ module keyCap(size,text,keydip,textsize,textz) {
 }
 
 /**
- * [keyCapDip description]
- * @param  {[type]} size   [description]
- * @param  {[type]} keydip [description]
- * @return {[type]}        [description]
+ * Keycap dip
+ * @param  {[type]} size   Kize of keycap
+ * @param  {[type]} keydip Dip of keytops
  */
 module keyCapDip(size, keydip) {
     radius = dipRadius(size[0],keydip);
@@ -92,12 +95,11 @@ module keyCapDip(size, keydip) {
 }
 
 /**
- * [keyCapText description]
- * @param  {[type]} size     [description]
- * @param  {[type]} text     [description]
- * @param  {[type]} textsize [description]
- * @param  {[type]} textz    [description]
- * @return {[type]}          [description]
+ * Keycap text
+ * @param  {[type]} size     Size of keycap used for text alignment
+ * @param  {[type]} text     Text to be printed
+ * @param  {[type]} textsize Size of letters
+ * @param  {[type]} textz    Vertical size of letters
  */
 module keyCapText(size, text, textsize, textz) {
     translate(multiplyVec(size,[.5,-.5,0]))
