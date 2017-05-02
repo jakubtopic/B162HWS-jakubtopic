@@ -10,7 +10,7 @@ $(function () {
 		}
 		var result = 25 - (25/array.length)*numberOfErrors;
 		document.getElementById('info').innerHTML =  ("Errors: <strong>" + numberOfErrors + "</strong>");
-		document.getElementById('result').innerHTML =  ("Points: <strong>" + result + "</strong> (+ 0-3 points for code quality)");
+		document.getElementById('result').innerHTML =  ("Points: <strong>" + result + "</strong> (+ 0-5 points for code quality)");
 
 	});
 });
